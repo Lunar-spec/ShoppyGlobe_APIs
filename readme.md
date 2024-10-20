@@ -30,7 +30,7 @@ This is APIs for ShoppyGlobe.
 - Clone the repository
 
 ```bash
-git clone https://github.com/PrismaLabs/shoppyglobe-api.git
+git clone https://github.com/Lunar-spec/ShoppyGlobe_APIs.git
 cd shoppyglobe-api
 ```
 
