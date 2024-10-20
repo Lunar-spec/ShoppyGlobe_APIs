@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cart      Cart[]
+}
+
+model Product {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  price       Float
+  description String
+  stock       Int
+  categoryId  String     @db.ObjectId
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  category    Category   @relation(fields: [categoryId], references: [id])
+  cartItems   CartItem[]
+}
+
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String    @unique
+  products Product[]
+}
+
+model Cart {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String     @db.ObjectId
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  quantity  Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+}
